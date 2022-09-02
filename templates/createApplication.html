@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+{% block title %}
+    Assign Product Owners
+{% endblock %}
+{% block content %}
+    <h2>Assign Product Owner(s) to Application</h2>
+    <form method="POST" action="/createApp/">
+    {{ form.csrf_token }}
+        <p>
+            {{ form.apps.label }}
+        </p>
+        {{ form.apps }}
+
+        {% if form.apps.errors %}
+            <ul class="errors">
+                {% for error in form.apps.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <p>
+            {{ form.users.label }}
+        </p>
+        {{ form.users }}
+
+        {% if form.users.errors %}
+            <ul class="errors">
+                {% for error in form.users.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <p>
+            <input type="submit" value="Add">
+        </p>
+    </form>
+
+{% endblock %}

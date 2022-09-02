@@ -1,0 +1,53 @@
+{% extends "layout.html" %}
+{% block title %}
+    Assign Product Owners
+{% endblock %}
+{% block content %}
+    <h2>Edit Application's Product Owner(s)</h2>
+    <form method="POST" action="/editApp/">
+    {{ form.csrf_token }}
+        <p>
+            {{ form.app.label }}
+        </p>
+        {{ form.app }}
+
+        {% if form.app.errors %}
+            <ul class="errors">
+                {% for error in form.app.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <p>
+            {{ form.current_product_owners.label }}
+        </p>
+        {{ form.current_product_owners }}
+
+        {% if form.current_product_owners.errors %}
+            <ul class="errors">
+                {% for error in form.current_product_owners.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <p>
+            {{ form.users.label }}
+        </p>
+        {{ form.users }}
+
+        {% if form.users.errors %}
+            <ul class="errors">
+                {% for error in form.users.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <p>
+            <input type="submit" value="Submit">
+        </p>
+    </form>
+
+{% endblock %}

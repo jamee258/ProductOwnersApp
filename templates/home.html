@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+{% block title %}
+    Product Owners
+{% endblock %}
+{% block content %}
+
+    <p>Applications and their associated product owners</p>
+
+    {% if isAdmin %}
+      <a class='btn btn-primary' href="/createApp/">Assign New Product Owners</a>
+    {% endif %}
+    
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Id</th>
+          <th scope="col">Application Name</th>
+          <th scope="col">Description</th>
+          <th scope="col">Product Owners</th>
+          <th scope="col">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in applications %}
+          <tr>
+            <td>{{ item.id }}</td>
+            <td>{{ item.name }}</td>
+            <td>{{ item.description }}</td>
+            <td>
+              {% for user in item.users %}
+                {% if loop.last  %}
+                  {{ user.first_name }} 
+                {% else %}
+                  {{ user.first_name }},
+                {% endif %}
+              {% endfor %}
+            </td>
+
+            {% if isAdmin %}  
+              <td><a class='btn btn-primary' href="/updateApp/{{ item.id }}">Edit</a><a class='btn btn-primary' href="/deleteApp/{{ item.id }}">Delete</a></td>
+            {% endif %}
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+{% endblock %}
