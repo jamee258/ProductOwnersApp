@@ -1,9 +1,9 @@
 from app import create_app
 import pytest
-from flask import Flask, current_app
-from flask.testing import FlaskClient
-from models import User, Application, db
-from flask_login import login_user, LoginManager, login_required, logout_user, current_user
+# from flask import Flask, current_app
+# from flask.testing import FlaskClient
+from models import User, Application
+# from flask_login import login_user, LoginManager, login_required, logout_user, current_user
 from passlib.hash import sha256_crypt
 
 @pytest.fixture(scope='session')
