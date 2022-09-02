@@ -3,4 +3,4 @@ run_tests:
   before_script:
     - pip install -r requirements.txt
   script:
-      - pytest
+    - pytest
