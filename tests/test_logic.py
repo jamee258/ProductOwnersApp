@@ -1,3 +1,7 @@
+import sys
+
+sys.path.append('../')
+
 from app import create_app
 import pytest
 # from flask import Flask, current_app
