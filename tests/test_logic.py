@@ -1,8 +1,8 @@
 import sys
 
-sys.path.append('../')
+sys.path.append('../../')
 
-from app import create_app
+from app import app
 import pytest
 # from flask import Flask, current_app
 # from flask.testing import FlaskClient
@@ -10,14 +10,14 @@ from models import User, Application
 # from flask_login import login_user, LoginManager, login_required, logout_user, current_user
 from passlib.hash import sha256_crypt
 
-@pytest.fixture(scope='session')
-def app():
-    app = create_app(config="config.DevelopmentConfig")
-    with app.app_context():
-        yield app
+# @pytest.fixture(scope='session')
+# def app():
+#     app = create_app(config="config.DevelopmentConfig")
+#     with app.app_context():
+#         yield app
 
 @pytest.fixture
-def client(app):
+def client():
     return app.test_client()
 
 # @pytest.fixture(scope='module')
