@@ -1,17 +1,9 @@
 import os
-from datetime import datetime
-from flask import Flask, render_template, request, url_for, redirect, flash, current_app as app
-from flask_sqlalchemy import SQLAlchemy
-from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
+from flask import Flask, render_template, url_for, redirect, flash, current_app as app
+from flask_login import login_user, LoginManager, login_required, logout_user, current_user
 from forms import ApplicationForm, EditApplicationForm, LoginForm
 
-from sqlalchemy.sql import func
-
 from passlib.hash import sha256_crypt
-
-from flask_csp.csp import csp_header
-
-import pyodbc
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -37,7 +29,6 @@ def create_app(config):
     return app
 
 @app.route("/")
-#@csp_header({'default-src':"'none'",'script-src':"'self'"})
 @login_required
 def home():
 
@@ -60,9 +51,12 @@ def login():
             password_input = form.password.data
             if sha256_crypt.verify(password_input, user.password):
                 login_user(user)
+                flash("You have successfully logged in", 'success')
                 return redirect(url_for('home'))
             else:
-                flash("Incorrect username and/or password combination")
+                flash("Incorrect username and/or password combination", 'error')
+        else:
+            flash("Incorrect username and/or password combination", 'error')
     return render_template('login.html', form=form)
 
 @app.route('/logout', methods=['GET', 'POST'])
@@ -70,13 +64,14 @@ def login():
 def logout():
     logout_user()
     print(current_user.is_authenticated)
-    flash("You have been logged out")
+    flash("You have successfully logged out", 'success')
     return redirect(url_for('login'))
 
 @app.route('/createApp/', methods=('GET', 'POST'))
 @login_required
 def create():
     if current_user.is_admin == False:
+        flash("You do not have the permissions to access this page")
         return redirect(url_for('home'))
     flash("Login Successful!")
     name = None
@@ -101,7 +96,12 @@ def create():
     return render_template('createApplication.html', form=form)
 
 @app.route('/updateApp/<int:id>', methods = ['GET', 'POST'])
+@login_required
 def update(id):
+    if current_user.is_admin == False:
+        flash("You do not have the permissions to access this page")
+        return redirect(url_for('home'))
+
     users = UserTable.query.all()
     selectedApp = ApplicationTable.query.filter_by(id=id).first()
 
@@ -113,7 +113,12 @@ def update(id):
     return render_template('editApplication.html', application=selectedApp, form=form)
 
 @app.route('/editApp/', methods = ['POST'])
+@login_required
 def edit():
+    if current_user.is_admin == False:
+        flash("You do not have the permissions to perform this action")
+        return redirect(url_for('home'))
+
     form = EditApplicationForm()
     selectedApp = ApplicationTable.query.filter_by(name=form.app.data).first()
     selectedApp.users = []
@@ -127,30 +132,17 @@ def edit():
     return redirect(url_for('home'))
 
 @app.route("/deleteApp/<int:id>")
+@login_required
 def delete(id):
+    if current_user.is_admin == False:
+        flash("You do not have the permissions to perform this action")
+        return redirect(url_for('home'))
 
     selectedApp = ApplicationTable.query.filter_by(id=id).first()
     db.session.delete(selectedApp)
     db.session.commit()
 
     return redirect(url_for('home'))
-
-@app.route("/hello/")
-@app.route("/hello/<name>")
-def hello_there(name = None):
-    return render_template(
-        "MainPage.html",
-        name=name,
-        date=datetime.now()
-    )
-
-@app.route("/about/")
-def about():
-    return render_template("about.html")
-
-@app.route("/contact/")
-def contact():
-    return render_template("contact.html")
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')

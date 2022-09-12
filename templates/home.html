@@ -9,7 +9,7 @@
     {% if isAdmin %}
       <a class='btn btn-primary' href="/createApp/">Assign New Product Owners</a>
     {% endif %}
-    
+
     <table class="table">
       <thead>
         <tr>
@@ -37,11 +37,17 @@
             </td>
 
             {% if isAdmin %}  
-              <td><a class='btn btn-primary' href="/updateApp/{{ item.id }}">Edit</a><a class='btn btn-primary' href="/deleteApp/{{ item.id }}">Delete</a></td>
+              <td><a class='btn btn-primary' href="/updateApp/{{ item.id }}">Edit</a><a class='btn btn-primary confirmation' href="/deleteApp/{{ item.id }}">Delete</a></td>
             {% endif %}
           </tr>
         {% endfor %}
       </tbody>
     </table>
+
+    <script type="text/javascript">
+      $('.confirmation').on('click', function () {
+          return confirm('Are you sure?');
+      });
+    </script>
 
 {% endblock %}

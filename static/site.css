@@ -5,6 +5,7 @@
 
 .message_flash {
     padding: 12px;
+    margin-left: -25px;
     border-radius: 3px;
     font-size: 1.2rem;
     margin-bottom: 16px;
