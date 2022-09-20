@@ -1,3 +1,8 @@
+variables:
+  DOCKER_TLS_CERTDIR: "/certs"
+  IMAGE_NAME: solutiondev246/product-owners-app
+  IMAGE_TAG: python-app-1.0
+
 stages:
   - test
   - build
@@ -16,10 +21,6 @@ build_image:
   image: docker:20.10.17
   services:
     - docker:20.10.17-dind
-  variables:
-    DOCKER_TLS_CERTDIR: "/certs"
-    IMAGE_NAME: solutiondev246/product-owners-app
-    IMAGE_TAG: python-app-1.0
   before_script:
     - docker login -u $REGISTRY_USER -p $REGISTRY_PASS
   script:
@@ -33,5 +34,5 @@ deploy:
     - chmod 400 $SSH_KEY
   script:
     - ssh -o StrictHostKeyChecking=no -i $SSH_KEY root@188.166.158.107 "
-        docker login -u $REGISTRY_USER -p $REGISTRY_PASS &&
+        docker login -u $REGISTRY_USER -p $REGISTRY_PASS &&      
         docker run -p 5000:5000 $IMAGE_NAME:$IMAGE_TAG"
