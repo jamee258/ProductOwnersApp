@@ -29,6 +29,7 @@ def create_app(config):
     app.config.from_object(config)
     return app
 
+# Homepage route
 @app.route("/")
 @login_required
 def home():
@@ -55,7 +56,7 @@ def login():
     if form.validate_on_submit():
         user = UserTable.query.filter_by(username=form.username.data).first()
         if user:
-            # Check if details are valid
+            # Check if login credentials are valid
             password_input = form.password.data
             if sha256_crypt.verify(password_input, user.password):
                 login_user(user)
@@ -71,7 +72,6 @@ def login():
 @login_required
 def logout():
     logout_user()
-    print(current_user.is_authenticated)
     flash("You have successfully logged out")
     return redirect(url_for('login'))
 
@@ -81,7 +81,6 @@ def create():
     if current_user.is_admin == False:
         flash("You do not have the permissions to access this page")
         return redirect(url_for('home'))
-    name = None
     form = ApplicationForm()
     users = UserTable.query.all()
     apps = ApplicationTable.query.filter(ApplicationTable.users == None).all()
@@ -158,7 +157,10 @@ def delete(id):
 def editComment():
     user = UserTable.query.filter_by(id=current_user.id).first()
     commentInput = request.form['userComments']
+
+    # Sanitise input to prevent most special characters
     regex = re.compile('[@_#$%^&*()<>?/\|}{~:]')
+    
     if(regex.search(commentInput) != None):
         flash("Comment update was unsuccessful. Only alphanumeric and some special characters are allowed")
         return redirect(url_for('home'))

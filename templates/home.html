@@ -51,7 +51,9 @@
 
     <h4>Your Comments:</h4>
     <form method="POST" action="/editComment">
-      <input type="text" id="userCommentsInput" name="userComments" value ='{{ currentUser.comments }}' pattern="[a-zA-Z0-9.!\s]+" title="Only alphanumeric and some special characters are allowed"><input type="submit" value="Save Comment" class='btn btn-primary saveCommentButton'>
+      <input type="text" id="userCommentsInput" name="userComments" value='{{ currentUser.comments }}' 
+      pattern="[a-zA-Z0-9.!\s]+" title="Only alphanumeric and some special characters are allowed">
+      <input type="submit" value="Save Comment" class='btn btn-primary saveCommentButton'>
     </form>
 
     <br>
