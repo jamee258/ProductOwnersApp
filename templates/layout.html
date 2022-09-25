@@ -21,7 +21,7 @@
         <div class="navbar">
             <a href="{{ url_for('home') }}" class="navbar-brand">Home</a>
             {% if current_user.is_authenticated %}
-                {{ current_user.first_name }}
+                <b>{{ current_user.first_name }}</b>
                 <a href="{{ url_for('logout') }}" class="navbar-brand logoutLink">Logout</a>
             {% else %}
                 <a href="{{ url_for('login') }}" class="navbar-brand">Login</a>
