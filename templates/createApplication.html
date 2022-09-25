@@ -3,11 +3,11 @@
     Assign Product Owners
 {% endblock %}
 {% block content %}
-    <h2>Assign Product Owner(s) to Application</h2>
+    <h2 class="titleHeader">Assign Product Owner(s) to Application</h2>
     <form method="POST" action="/createApp/">
     {{ form.csrf_token }}
         <p>
-            {{ form.apps.label }}
+            <b>{{ form.apps.label }}</b>
         </p>
         {{ form.apps }}
 
@@ -19,9 +19,11 @@
             </ul>
         {% endif %}
 
-        <p>
-            {{ form.users.label }}
-        </p>
+        <div class="productOwnersLabel">
+            <p>
+                <b>{{ form.users.label }}</b>
+            </p>
+        </div>
         {{ form.users }}
 
         {% if form.users.errors %}
@@ -33,7 +35,7 @@
         {% endif %}
 
         <p>
-            <input type="submit" value="Add">
+            <input type="submit" value="Save" class='btn btn-primary'>
         </p>
     </form>
 

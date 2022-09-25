@@ -1,5 +1,6 @@
 import os
-from flask import Flask, render_template, url_for, redirect, flash, current_app as app
+import re
+from flask import Flask, render_template, url_for, redirect, flash, request, current_app as app
 from flask_login import login_user, LoginManager, login_required, logout_user, current_user
 from forms import ApplicationForm, EditApplicationForm, LoginForm
 
@@ -35,15 +36,22 @@ def home():
     apps = ApplicationTable.query.all()
 
     isAdmin = False
-    # For checking if user is admin
+    # For checking if current user is admin
     if current_user.is_admin == True:
         isAdmin = True
 
-    return render_template("home.html", applications=apps, isAdmin=isAdmin)
+    user = UserTable.query.filter_by(id=current_user.id).first()
+    if(user.comments == None):
+        user.comments = ""
+
+    allUsersWithComments = UserTable.query.filter(UserTable.comments!=None, UserTable.comments!="", UserTable.id!=user.id).all()
+
+    return render_template("home.html", applications=apps, isAdmin=isAdmin, currentUser=user, allComments=allUsersWithComments)
 
 @app.route('/login', methods=('GET', 'POST'))
 def login():
     form = LoginForm()
+
     if form.validate_on_submit():
         user = UserTable.query.filter_by(username=form.username.data).first()
         if user:
@@ -51,12 +59,12 @@ def login():
             password_input = form.password.data
             if sha256_crypt.verify(password_input, user.password):
                 login_user(user)
-                flash("You have successfully logged in", 'success')
+                flash("You have successfully logged in")
                 return redirect(url_for('home'))
             else:
-                flash("Incorrect username and/or password combination", 'error')
+                flash("Incorrect username and/or password combination")
         else:
-            flash("Incorrect username and/or password combination", 'error')
+            flash("Incorrect username and/or password combination")
     return render_template('login.html', form=form)
 
 @app.route('/logout', methods=['GET', 'POST'])
@@ -64,7 +72,7 @@ def login():
 def logout():
     logout_user()
     print(current_user.is_authenticated)
-    flash("You have successfully logged out", 'success')
+    flash("You have successfully logged out")
     return redirect(url_for('login'))
 
 @app.route('/createApp/', methods=('GET', 'POST'))
@@ -73,7 +81,6 @@ def create():
     if current_user.is_admin == False:
         flash("You do not have the permissions to access this page")
         return redirect(url_for('home'))
-    flash("Login Successful!")
     name = None
     form = ApplicationForm()
     users = UserTable.query.all()
@@ -129,6 +136,8 @@ def edit():
         selectedApp.users.append(retrievedUser)
     db.session.commit()
 
+    flash("Product Owners updated successfully")
+
     return redirect(url_for('home'))
 
 @app.route("/deleteApp/<int:id>")
@@ -142,6 +151,32 @@ def delete(id):
     db.session.delete(selectedApp)
     db.session.commit()
 
+    return redirect(url_for('home'))
+
+@app.route("/editComment", methods = ['POST'])
+@login_required
+def editComment():
+    user = UserTable.query.filter_by(id=current_user.id).first()
+    commentInput = request.form['userComments']
+    regex = re.compile('[@_#$%^&*()<>?/\|}{~:]')
+    if(regex.search(commentInput) != None):
+        flash("Comment update was unsuccessful. Only alphanumeric and some special characters are allowed")
+        return redirect(url_for('home'))
+    else:
+        user.comments = commentInput
+        db.session.commit()
+        flash("Your comments have been updated successfully")
+        return redirect(url_for('home'))
+
+@app.route("/deleteComment", methods = ['POST'])
+@login_required
+def deleteComment():
+    userID = request.form['commentUserID']
+    user = UserTable.query.filter_by(id=userID).first()
+    user.comments = ""
+    db.session.commit()
+
+    flash("You have successfully deleted the comment")
     return redirect(url_for('home'))
 
 if __name__ == '__main__':

@@ -1,3 +1,54 @@
+.titleHeader {
+    margin-top: 5px;
+}
+
+.login-form {
+    width: 340px;
+    margin: 50px auto;
+    font-size: 15px;
+}
+
+.login-form form {
+    margin-bottom: 15px;
+    background: #f7f7f7;
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+    padding: 30px;
+}
+
+.login-form h2 {
+    margin: 0 0 15px;
+}
+
+.loginButton {        
+    font-size: 45px;
+    font-weight: bold;
+    text-align: center;
+    margin: 0 auto;
+    display:block;
+    padding-top: 10px;
+    border-radius: 2px;
+}
+
+.pass-container {
+    margin-top: 10px;
+    margin-left: 10px;
+}
+
+.user-container {
+    margin-top: 10px;
+    margin-left: 5px;
+}
+
+.button-container {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+}
+
+.message_flash {
+    margin-left: -25px;
+}
+
 .message {
     font-weight: 600;
     color: blue;
@@ -14,8 +65,13 @@
     color: black;
 }
 
+.logoutLink {
+    text-shadow: 1px 1px black;
+}
+
 .navbar {
-    background-color: lightslategray;
+    background: rgb(13,110,253);
+    background: linear-gradient(90deg, rgba(13,110,253,1) 0%, rgba(13,110,253,1) 35%, rgba(173,210,240,1) 100%);
     font-size: 1em;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     color: white;
@@ -40,4 +96,28 @@
 .body-content {
     padding: 5px;
     font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+#otherUserCommentsContainer {
+    width: 50%;
+    padding: 5px;
+    margin-top: 5px;
+    border-style: dotted;
+    border-color: lightblue;
+}
+
+.saveCommentButton {
+    margin-left: 10px;
+}
+
+.productOwnersLabel {
+    margin-top: 10px;
+}
+
+.productOwnersSubmitButton {
+    margin-top: 10px;
+}
+
+.newProductOwnersButton {
+    float: right;
 }

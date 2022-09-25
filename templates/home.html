@@ -4,10 +4,10 @@
 {% endblock %}
 {% block content %}
 
-    <p>Applications and their associated product owners</p>
+    <h2 class="titleHeader">Applications and their associated product owners</h2>
 
     {% if isAdmin %}
-      <a class='btn btn-primary' href="/createApp/">Assign New Product Owners</a>
+      <a class='btn btn-primary newProductOwnersButton' href="/createApp/">Assign New Product Owners</a>
     {% endif %}
 
     <table class="table">
@@ -17,7 +17,9 @@
           <th scope="col">Application Name</th>
           <th scope="col">Description</th>
           <th scope="col">Product Owners</th>
-          <th scope="col">Action</th>
+          {% if isAdmin %}
+            <th scope="col">Action</th>
+          {% endif %}
         </tr>
       </thead>
       <tbody>
@@ -37,12 +39,36 @@
             </td>
 
             {% if isAdmin %}  
-              <td><a class='btn btn-primary' href="/updateApp/{{ item.id }}">Edit</a><a class='btn btn-primary confirmation' href="/deleteApp/{{ item.id }}">Delete</a></td>
+              <td>
+                <a class='btn btn-primary' href="/updateApp/{{ item.id }}">Edit</a>
+                <a class='btn btn-primary confirmation' href="/deleteApp/{{ item.id }}">Delete</a>
+              </td>
             {% endif %}
           </tr>
         {% endfor %}
       </tbody>
     </table>
+
+    <h4>Your Comments:</h4>
+    <form method="POST" action="/editComment">
+      <input type="text" id="userCommentsInput" name="userComments" value ='{{ currentUser.comments }}' pattern="[a-zA-Z0-9.!\s]+" title="Only alphanumeric and some special characters are allowed"><input type="submit" value="Save Comment" class='btn btn-primary saveCommentButton'>
+    </form>
+
+    <br>
+    <br>
+
+    <h5>Other Comments:</h5>
+    {% for userComment in allComments %}
+      <div id="otherUserCommentsContainer">
+        "{{ userComment.comments }}" - <i>{{ userComment.username }}</i>
+        {% if isAdmin %}
+          <form method="POST" action="/deleteComment">
+            <input type="text" id="commentUserIDInput" name="commentUserID" value='{{ userComment.id }}' readonly hidden>
+            <input type="submit" id="deleteCommentButton" value="Delete" class='btn btn-danger confirmation'>
+          </form>
+        {% endif %}
+      </div>
+    {% endfor %}
 
     <script type="text/javascript">
       $('.confirmation').on('click', function () {

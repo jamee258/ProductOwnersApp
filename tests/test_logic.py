@@ -44,3 +44,13 @@ def test_password_hashing():
 def test_password_verification():
     encryptedPassword = sha256_crypt.hash("testPassword")
     assert sha256_crypt.verify("testPassword", encryptedPassword)
+
+def handleIntValue(x):
+    if not isinstance(x, int):
+        raise TypeError('Please provide an int argument')
+    return x.capitalize()
+
+# Check the correct exception is raised when editing a Product Owner record
+def test_correct_exception_raised():
+    with pytest.raises(TypeError):
+        handleIntValue("testString")

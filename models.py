@@ -13,7 +13,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(100), nullable=False)
     is_admin = db.Column(db.Integer, nullable=False)
-    # applications = db.relationship('Application', secondary=product_owners, backref='app_contacts')
+    comments = db.Column(db.String(200))
 
     def __repr__(self):
         return f'{self.first_name}'
